@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<p th:text="${person.getFio()}"></p>
+<p th:text="${person.getYearOfBirthday()}"></p>
+
+<p th:text="${books.size() == 0 } ? 'Читатель не взял ни одной книги'"></p>
+
+<div th:each="book : ${books}">
+    <p th:text="${book.toString()}"></p>
+</div>
+
+</body>
+</html>

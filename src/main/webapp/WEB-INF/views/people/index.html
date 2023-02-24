@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список читателей</title>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th>ФИО</th>
+        <th>Год рождения</th>
+        <th>Редактировать</th>
+        <th>Удалить</th>
+    </tr>
+    <tr th:each="persone : ${people}">
+        <td><a th:text="${persone.getFio()}" th:href="@{/people/show/{id}(id=${persone.getId()})}"></a></td>
+        <td th:text="${persone.getYearOfBirthday()}"></td>
+        <td><a th:href="@{/people/edit/{id}(id=${persone.getId()})}">Редактировать</a></td>
+        <td><a th:href="@{/people/delete/{id}(id=${persone.getId()})}">Удалить</a></td>
+    </tr>
+</table>
+<hr/>
+
+<a href="/people/new">Создать нового читателя</a>
+
+
+</body>
+</html>

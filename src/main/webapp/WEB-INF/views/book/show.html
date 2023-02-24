@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<p th:text="${book.getTitle()}"></p>
+<p th:text="${book.getAuthor()}"></p>
+<p th:text="${book.getYear()}"></p>
+
+<div th:if="${book.getPersonId() == null}">
+    <p> Эта книга свободна. Кому назначить ее?</p>
+
+    <form th:method="PATCH" th:action="@{/book/addreader/{id}(id=${book.getId()})}">
+        <label for="person">Выберите человека:</label>
+        <select th:object="${person}" th:field="*{id}" id="person">
+            <option th:each="person : ${people}" th:value="${person.getId()}"
+                    th:text="${person.getFio()}"></option>
+        </select>
+        <input type="submit" value="Назначить книгу">
+    </form>
+</div>
+
+<div th:if="${book.getPersonId() != null}">
+    <p>Книга занята</p>
+    <a th:href="@{/book/free/{id}(id=${book.getId()})}">Освободить</a>
+</div>
+
+</body>
+</html>
