@@ -1,8 +1,7 @@
 package com.demura.library.controller;
 
-import com.demura.library.dao.BookDao;
-import com.demura.library.dao.PersonDao;
 import com.demura.library.model.Person;
+import com.demura.library.services.PersonService;
 import com.demura.library.util.PersonValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,34 +14,35 @@ import javax.validation.Valid;
 @RequestMapping("/people")
 public class PeopleController {
 
-    private final PersonDao personDao;
-    private final BookDao bookDao;
+    private final PersonService personService;
 
     private final PersonValidator personValidator;
 
-    public PeopleController(PersonDao personDao, BookDao bookDao, PersonValidator personValidator) {
-        this.personDao = personDao;
-        this.bookDao = bookDao;
+    public PeopleController(PersonService personService, PersonValidator personValidator) {
+        this.personService = personService;
         this.personValidator = personValidator;
     }
 
     //Показать всех
     @GetMapping
     public String getAllPeople(Model model) {
-        model.addAttribute("people", personDao.peopleList());
+        model.addAttribute("people", personService.findAllPerson());
         return "people/index";
     }
 
     @GetMapping("/show/{id}")
     private String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDao.getOnePeople(id));
-        model.addAttribute("books", bookDao.getBookForPerson(id));
+        Person person = personService.findOnePerson(id);
+        model.addAttribute("person", person);
+        model.addAttribute("books", person.getBooks());
         return "people/show";
     }
+
     //Показать одного
     @GetMapping("/edit/{id}")
     private String edit(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDao.getOnePeople(id));
+        Person person = personService.findOnePerson(id);
+        model.addAttribute("person", person);
         return "people/edit";
     }
 
@@ -59,14 +59,14 @@ public class PeopleController {
         if (bindingResult.hasErrors()) {
             return "people/new";
         }
-        personDao.save(person);
+        personService.save(person);
         return "redirect:/people";
     }
 
     //Удалить
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id) {
-        personDao.delete(id);
+        personService.delete(id);
         return "redirect:/people";
     }
 
@@ -76,7 +76,7 @@ public class PeopleController {
                          BindingResult bindingResult,
                          @PathVariable("id") int id) {
         if (bindingResult.hasErrors()) return "people/edit";
-        personDao.update(id, person);
+        personService.update(id, person);
         return "redirect:/people";
     }
 }

@@ -1,8 +1,7 @@
 package com.demura.library.util;
 
-import com.demura.library.dao.BookDao;
 import com.demura.library.model.Book;
-import com.demura.library.model.Person;
+import com.demura.library.services.BookService;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -11,10 +10,10 @@ import org.springframework.validation.Validator;
 @Component
 public class BookValidator implements Validator {
 
-    private final BookDao bookDao;
+    private final BookService bookService;
 
-    public BookValidator(BookDao bookDao) {
-        this.bookDao = bookDao;
+    public BookValidator(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @Override
@@ -25,7 +24,7 @@ public class BookValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Book book = (Book) o;
-        if (bookDao.show(book.getTitle(), book.getAuthor()).isPresent()) {
+        if (bookService.show(book.getTitle(), book.getAuthor()).isPresent()) {
             errors.rejectValue("title", "", "This book is already exists");
         }
     }

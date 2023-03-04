@@ -1,7 +1,7 @@
 package com.demura.library.util;
 
-import com.demura.library.dao.PersonDao;
 import com.demura.library.model.Person;
+import com.demura.library.services.PersonService;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -10,10 +10,10 @@ import org.springframework.validation.Validator;
 @Component
 public class PersonValidator implements Validator {
 
-    private final PersonDao personDao;
+    private final PersonService personService;
 
-    public PersonValidator(PersonDao personDao) {
-        this.personDao = personDao;
+    public PersonValidator(PersonService personService) {
+        this.personService = personService;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class PersonValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Person person = (Person) o;
-        if (personDao.show(person.getFio(), person.getYearOfBirthday()).isPresent()) {
+        if (personService.show(person.getFio(), person.getYearOfBirthday()).isPresent()) {
             errors.rejectValue("fio", "", "This reader is already exists");
         }
     }
